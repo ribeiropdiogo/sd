@@ -12,7 +12,6 @@ public class Server {
 
             ServerWorker sw = new ServerWorker(socket);
             new Thread(sw).start();
-
         }
     }
 }
