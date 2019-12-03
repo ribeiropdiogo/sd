@@ -11,11 +11,32 @@ public class Client {
         try {
             CloudSoundnterface csi = new RemoteCloudSound("localhost",12345);
 
-            String[] info = register();
-            csi.register(info[0],info[1]);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String command = reader.readLine();
+
+
+            while (command != null && !command.equals("exit")){
+                switch (command){
+                    case "register":
+                        String[] info = register();
+                        csi.register(info[0],info[1]);
+                        break;
+                    case "help":
+                        System.out.println("> List of available commands");
+                        System.out.println("register   register user in system");
+                        System.out.println("login      login in system");
+                        break;
+                    default:
+                        System.out.println("> Invalid Command");
+                        break;
+                }
+                command = reader.readLine();
+            }
 
         } catch (Exception e){
             e.printStackTrace();
+        } finally {
+            System.out.println("> Shutting down");
         }
     }
 

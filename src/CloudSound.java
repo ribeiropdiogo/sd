@@ -8,6 +8,7 @@ public class CloudSound {
 
     public CloudSound() {
         this.users = new HashMap<>();
+        this.lockCloudSound = new ReentrantLock();
     }
 
     public void register(String username, String password){

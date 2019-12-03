@@ -6,9 +6,11 @@ import java.net.Socket;
 
 public class ServerWorker implements Runnable{
     private Socket socket;
+    private CloudSound cs;
 
-    public ServerWorker(Socket s) {
+    public ServerWorker(Socket s, CloudSound clouds) {
         this.socket = s;
+        this.cs = clouds;
     }
 
     public void run() {
@@ -21,7 +23,22 @@ public class ServerWorker implements Runnable{
             String data = in.readLine();
 
             while (data != null && !data.equals("exit")) {
-
+                String[] ops = data.split(" ");
+                switch (ops[0]){
+                    case "register":
+                        System.out.println("> Registering client "+data);
+                        try {
+                            cs.register(ops[1],ops[2]);
+                            out.println(0);
+                        } catch (Exception e){
+                            out.println(1);
+                        }
+                        break;
+                    default:
+                        System.out.println("> Unrecognized operation");
+                        break;
+                }
+                data = in.readLine();
             }
 
             socket.close();
