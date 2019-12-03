@@ -2,33 +2,41 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class Client {
+    private CloudSoundnterface csi;
+
     public static void main(String[] args) throws InterruptedException, IOException {
-        /*
-        --------> Cenas para efeitos de testes
+        try {
+            CloudSoundnterface csi = new RemoteCloudSound("localhost",12345);
 
-        Socket s = new Socket("localhost",12345);
+            String[] info = register();
+            csi.register(info[0],info[1]);
 
-        ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(s.getOutputStream()));
-        oos.flush();
-        ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(s.getInputStream()));
-
-        System.out.println("> Connected to "+ s.getRemoteSocketAddress());
-        BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-        String str = in.readLine();
-        PrintWriter pw = new PrintWriter(s.getOutputStream());
-
-        while (str != null){
-            pw.println();
-            pw.flush();
-            str = in.readLine();
+        } catch (Exception e){
+            e.printStackTrace();
         }
+    }
 
-        s.shutdownOutput();
-        s.shutdownInput();
-        s.close();
+    public static String[] register(){
+        Scanner input = new Scanner(System.in);
 
-         */
+        System.out.print("username: ");
+        String username = input.nextLine();
+        System.out.print("password: ");
+        String password = input.nextLine();
+
+        String[] info = new String[2];
+        info[0] = username;
+        info[1] = password;
+
+        return info;
+    }
+
+    public static void login(){
+        System.out.println("username: ");
+
+        System.out.println("password: ");
     }
 }
