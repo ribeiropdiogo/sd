@@ -1,0 +1,25 @@
+//Registo
+REG +string(nome)+string(password)
+
+//answer(weak pass?)
+SUCCESS||ERROR NAME ALREADY IN USE||ERROR UNKNOWN
+
+//Login 
+LOG +string(name)+string(password)
+//answer
+SUCCESS||ERROR WRONG PASSWORD||ERROR NO USER||||ERROR UNKNOWN
+
+//Publish
+PUB + string(titulo)+string(interprete) +string(ano)+ (tags)[]{até acabar a line,maybe dar encode é melhor} \n bytes(lines+"END")
+//answer
+SUCCESS||ERROR UNKNOWN
+
+//Search
+SCH+string(etiqueta=nome||interprete||tag?)
+//answer
+(string(titulo)+string(interprete)+string(ano)+tags(maybe encode for real))[lines]+END
+
+//Download
+DOW+int
+//answer
+SUCCESS+bytes(lines+"END")||ERROR NOT FOUND||EROR UNKNOWN
