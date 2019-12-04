@@ -34,7 +34,7 @@ public class uploadLog {
         this.wakeUpOnUpdate.signalAll();
     }
 
-    public void sleepOnUpdated(int lastLogUpdated) {
+    public void sleepIfUpdated(int lastLogUpdated) {
         if (lastLogUpdated == this.Nlogs) {
             try {
                 this.wakeUpOnUpdate.await();

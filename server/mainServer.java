@@ -18,15 +18,13 @@ public class mainServer {
     public static void main(String[] args) {
 
         model serverinfo = new model();
-        String mediaFolderPath="./mediaFiles/";
-        
-
+        String mediaFolderPath = "./mediaFiles/";
         try {
             ServerSocket ssSock = new ServerSocket(12345);
 
             while (true) {
                 Socket clSock = ssSock.accept();
-                new Thread(new clientHelper(clSock, serverinfo,mediaFolderPath)).start();
+                new Thread(new serverWorker(clSock, serverinfo, mediaFolderPath)).start();
                 System.out.println("Acepted Request");
             }
         } catch (Exception e) {

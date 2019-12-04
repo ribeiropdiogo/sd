@@ -56,6 +56,7 @@ public class clientRemote {
                 Files.write(Avthemecpy.toPath(), fileBytes);
 
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println(e.getMessage() + " at 2nd try");
             }
 
