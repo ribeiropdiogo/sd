@@ -111,11 +111,13 @@ public class serverWorker implements Runnable {
         String[] infos = Input.split(" ");
         if (infos.length < 4) {
             this.sendNoInput(socketWriter);
+            return;
         }
         String tagList[] = new String[infos.length - 3];
         for (int i = 0; i < (infos.length - 3); i++) {
             tagList[i] = infos[i + 3];
         }
+        //Deve agora fazer o download e só depois adicionar a metadata
 
         this.serverInfo.addFile(infos[0], infos[1], infos[2], tagList);
         socketWriter.println("SUCCESS UPLOADED");
@@ -132,7 +134,7 @@ public class serverWorker implements Runnable {
     }
 
     // Falta respestar as restrições
-    // recebe um id, tem se sacar o nome do model
+    // recebe um id, tem se sacar o nome do model ou guardamos com id
     public void download(String fileName, PrintWriter socketWriter) {
         String filePath = new StringBuilder(this.mediaFolderPath).append(fileName).toString();
         System.out.println(filePath);

@@ -51,7 +51,6 @@ public class model implements Serializable {
             if (fileAt.containsTag(searchTagIn)) {
                 songList.add(fileAt.toString());
             }
-            it.remove();
         }
        return songList; 
     }
