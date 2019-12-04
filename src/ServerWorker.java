@@ -1,3 +1,7 @@
+import Exceptions.UserNotFound;
+import Exceptions.WrongPasswordException;
+import Exceptions.userExists;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -34,6 +38,24 @@ public class ServerWorker implements Runnable{
                         } catch (userExists u){
                             System.out.println("> Username already exists");
                             out.println("1");
+                        } catch (Exception e){
+                            out.println("-1");
+                        } finally {
+                            out.flush();
+                        }
+                        break;
+                    case "login":
+                        System.out.println("> Attempting to login user "+ops[1]);
+                        try {
+                            cs.login(ops[1], ops[2]);
+                            System.out.println("> "+ops[1]+" logged in");
+                            out.println("0");
+                        } catch (UserNotFound u){
+                            System.out.println("> User not found");
+                            out.println("1");
+                        } catch (WrongPasswordException w){
+                            System.out.println("> User entered wrong password");
+                            out.println("2");
                         } catch (Exception e){
                             out.println("-1");
                         } finally {

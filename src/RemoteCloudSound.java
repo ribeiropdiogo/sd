@@ -29,4 +29,17 @@ public class RemoteCloudSound implements CloudSoundnterface {
 
         return r;
     }
+
+    public int login(String username, String password){
+        out.println("login "+username+" "+password);
+        out.flush();
+        int r = 0;
+        try {
+            r = Integer.parseInt(in.readLine());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return r;
+    }
 }
