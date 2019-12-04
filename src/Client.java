@@ -5,11 +5,11 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
-    private CloudSoundnterface csi;
+    private static CloudSoundnterface csi;
 
     public static void main(String[] args) throws InterruptedException, IOException {
         try {
-            CloudSoundnterface csi = new RemoteCloudSound("localhost",12345);
+            csi = new RemoteCloudSound("localhost",12345);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String command = reader.readLine();
@@ -18,13 +18,15 @@ public class Client {
             while (command != null && !command.equals("exit")){
                 switch (command){
                     case "register":
-                        String[] info = register();
-                        csi.register(info[0],info[1]);
+                        // Existe um bug! - qd os campos estão por preencher o ServerWorker estoura
+                        register();
+                        break;
+                    case "login":
                         break;
                     case "help":
                         System.out.println("> List of available commands");
                         System.out.println("register   register user in system");
-                        System.out.println("login      login in system");
+                        System.out.println("login      access the system");
                         break;
                     default:
                         System.out.println("> Invalid Command");
@@ -40,19 +42,27 @@ public class Client {
         }
     }
 
-    public static String[] register(){
-        Scanner input = new Scanner(System.in);
+    public static void register(){
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-        System.out.print("username: ");
-        String username = input.nextLine();
-        System.out.print("password: ");
-        String password = input.nextLine();
+        try{
+            System.out.print("username: ");
+            String username = reader.readLine();
+            System.out.print("password: ");
+            String password = reader.readLine();
 
-        String[] info = new String[2];
-        info[0] = username;
-        info[1] = password;
+            int r = csi.register(username,password);
 
-        return info;
+            if (r == 0){
+                System.out.println("> User registered with success!");
+            } else if (r == 1){
+                System.out.println("> Username already in use, try again.");
+            } else {
+                System.out.println("> Ups, something did not work :(");
+            }
+        } catch (IOException e){
+            System.out.println("> An IO Exception has occured!");
+        }
     }
 
     public static void login(){

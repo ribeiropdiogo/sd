@@ -26,12 +26,18 @@ public class ServerWorker implements Runnable{
                 String[] ops = data.split(" ");
                 switch (ops[0]){
                     case "register":
-                        System.out.println("> Registering client "+data);
+                        System.out.println("> Registering user "+ops[1]+" with password "+ops[2]);
                         try {
-                            cs.register(ops[1],ops[2]);
-                            out.println(0);
+                            cs.register(ops[1], ops[2]);
+                            System.out.println("> User registered with success!");
+                            out.println("0");
+                        } catch (userExists u){
+                            System.out.println("> Username already exists");
+                            out.println("1");
                         } catch (Exception e){
-                            out.println(1);
+                            out.println("-1");
+                        } finally {
+                            out.flush();
                         }
                         break;
                     default:
@@ -42,6 +48,7 @@ public class ServerWorker implements Runnable{
             }
 
             socket.close();
+            out.flush();
             System.out.println("> Connection ended");
         } catch (Exception e){
             e.printStackTrace();

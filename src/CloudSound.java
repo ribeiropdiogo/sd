@@ -11,10 +11,17 @@ public class CloudSound {
         this.lockCloudSound = new ReentrantLock();
     }
 
-    public void register(String username, String password){
+    public int register(String username, String password) throws userExists{
+        int r = 0;
         this.lockCloudSound.lock();
         User u = new User(username,password);
-        this.users.put(username,u);
+        if (this.users.containsKey(username)){
+            r = 1;
+            throw new userExists("username already exists");
+        } else {
+            this.users.put(username,u);
+        }
         this.lockCloudSound.unlock();
+        return r;
     }
 }

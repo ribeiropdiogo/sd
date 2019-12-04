@@ -17,8 +17,16 @@ public class RemoteCloudSound implements CloudSoundnterface {
         this.out = new PrintWriter(socket.getOutputStream());
     }
 
-    public void register(String username, String password) {
+    public int register(String username, String password){
         out.println("register "+username+" "+password);
         out.flush();
+        int r = 0;
+        try {
+            r = Integer.parseInt(in.readLine());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return r;
     }
 }
