@@ -31,13 +31,18 @@ public class uploadLog {
     public synchronized void addLog(String newLog) {
         this.logs.add(newLog);
         this.Nlogs++;
+        this.lock.lock();
         this.wakeUpOnUpdate.signalAll();
+        this.lock.unlock();
     }
 
     public void sleepIfUpdated(int lastLogUpdated) {
         if (lastLogUpdated == this.Nlogs) {
             try {
-                this.wakeUpOnUpdate.await();
+                this.lock.lock();
+                wakeUpOnUpdate.await();
+                System.out.println("Wake me up inside");
+                this.lock.unlock();
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 System.out.println("Update Thread was unexpectedly woken");

@@ -50,8 +50,6 @@ public class mediaFile {
             builder.append(this.tags[i]+" ");
         }
 
-        builder.append(this.ano);
-
         return builder.toString();
     }
 

@@ -24,13 +24,11 @@ public class serverWorker implements Runnable {
     private String loggedUserName;
     private String mediaFolderPath;
     private Socket socket;
-    private int lastUpdatedLog;
     private model serverInfo;
 
     public serverWorker(Socket cSock, model serverInfoIn, String mediaFolderIn) {
         this.serverInfo = serverInfoIn;
         this.socket = cSock;
-        this.lastUpdatedLog = serverInfoIn.getNLogs();
         this.mediaFolderPath = mediaFolderIn;
     }
 
@@ -82,7 +80,7 @@ public class serverWorker implements Runnable {
         } catch (Exception e) {
             this.sendNoInput(socketWriter);
             e.printStackTrace();
-        }
+        } 
         socketWriter.println("SUCESS");
         socketWriter.flush();
 
@@ -164,6 +162,7 @@ public class serverWorker implements Runnable {
 
             BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter socketWriter = new PrintWriter(this.socket.getOutputStream());
+            new Thread(new notificationWorker(this.serverInfo,socketWriter)).start(); 
             String s = null;
 
             while ((s = socketReader.readLine()) != null) {
