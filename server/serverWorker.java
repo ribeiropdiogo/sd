@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class serverWorker implements Runnable {
         this.serverInfo = serverInfoIn;
         this.socket = cSock;
         this.mediaFolderPath = mediaFolderIn;
+        this.loggedUserName = "";
     }
 
     public void processInput(String input, BufferedReader socketReader, PrintWriter socketWriter) {
@@ -53,7 +55,7 @@ public class serverWorker implements Runnable {
             break;
         case ("PUB"):
             System.out.println("user wants to publish");
-            this.publish(input.substring(4), socketWriter);
+            this.publish(input.substring(4), socketWriter, socketReader);
             break;
         case ("SEK"):
             System.out.println("user searching");
@@ -80,7 +82,7 @@ public class serverWorker implements Runnable {
         } catch (Exception e) {
             this.sendNoInput(socketWriter);
             e.printStackTrace();
-        } 
+        }
         socketWriter.println("SUCESS");
         socketWriter.flush();
 
@@ -105,7 +107,13 @@ public class serverWorker implements Runnable {
         socketWriter.flush();
     }
 
-    public void publish(String Input, PrintWriter socketWriter) {
+    public void publish(String Input, PrintWriter socketWriter, BufferedReader socketReader) {
+        if (this.loggedUserName == "") {
+            socketWriter.println("ERROR NOT LOGGED");
+            return;
+        }
+
+        String encodedString;
         String[] infos = Input.split(" ");
         if (infos.length < 4) {
             this.sendNoInput(socketWriter);
@@ -115,9 +123,26 @@ public class serverWorker implements Runnable {
         for (int i = 0; i < (infos.length - 3); i++) {
             tagList[i] = infos[i + 3];
         }
-        //Deve agora fazer o download e só depois adicionar a metadata
 
-        this.serverInfo.addFile(infos[0], infos[1], infos[2], tagList);
+        String filePath = new StringBuilder(this.mediaFolderPath).append(this.serverInfo.getNextFileNString())
+                .toString();
+        System.out.println(filePath);
+        File file2Upload = new File(filePath);
+
+        try {
+            FileOutputStream output = new FileOutputStream(filePath, true);
+            while ((encodedString = socketReader.readLine()).equals("END") == false) {
+
+                output.write(Base64.getDecoder().decode(encodedString));
+                output.flush();
+
+            }
+            output.close();
+            this.serverInfo.addFile(infos[0], infos[1], infos[2], tagList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            file2Upload.delete();
+        }
         socketWriter.println("SUCCESS UPLOADED");
         socketWriter.flush();
     }
@@ -162,7 +187,7 @@ public class serverWorker implements Runnable {
 
             BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter socketWriter = new PrintWriter(this.socket.getOutputStream());
-            new Thread(new notificationWorker(this.serverInfo,socketWriter)).start(); 
+            new Thread(new notificationWorker(this.serverInfo, socketWriter)).start();
             String s = null;
 
             while ((s = socketReader.readLine()) != null) {

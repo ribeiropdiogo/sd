@@ -35,6 +35,10 @@ public class model implements Serializable {
         this.uploadLog.addLog(newFile.toString());
     }
 
+    public String getNextFileNString(){
+        return Integer.toString(this.files.size()+1);
+    }
+
     public String getFileTitle(int fileId) {
         return this.files.get(fileId).getFileTitle();
     }
@@ -62,13 +66,13 @@ public class model implements Serializable {
         this.uploadLog.sleepIfUpdated(lastLogUpdated);
     }
 
-    public Condition getUpdateCondition(){
+    /*public Condition getUpdateCondition(){
         return this.uploadLog.getUpdateCondition();
     }
 
     public boolean isUpdated(int lastLogUpdated){
         return this.uploadLog.isUpdated(lastLogUpdated);
-    }
+    }*/
 
     public String[] newLogs(int lastLogUpdated) {
         System.out.println("Dude had "+lastLogUpdated+" im at "+this.uploadLog.getNlogs());
