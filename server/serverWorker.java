@@ -15,10 +15,12 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 
 public class serverWorker implements Runnable {
@@ -158,17 +160,31 @@ public class serverWorker implements Runnable {
 
     // Falta respestar as restrições
     // recebe um id, tem se sacar o nome do model ou guardamos com id
-    public void download(String fileName, PrintWriter socketWriter) {
-        String filePath = new StringBuilder(this.mediaFolderPath).append(fileName).toString();
+    public void download(String fileId, PrintWriter socketWriter) {
+        int fileNumber=Integer.parseInt(fileId);
+        String filePath = new StringBuilder(this.mediaFolderPath).append(fileNumber).toString();
+        String fileName = new StringBuilder(this.serverInfo.getFileTitle(fileNumber)).append(" "+serverInfo.getFileArtist(fileNumber)).toString();
         System.out.println(filePath);
         try {
-            File file2download = new File(filePath);
-            byte[] fileBytes = Files.readAllBytes(file2download.toPath());
-            String encodedString = Base64.getEncoder().encodeToString(fileBytes);
-
-            socketWriter.println(encodedString);
+            socketWriter.println("DOW "+fileName);
             socketWriter.flush();
-            System.out.println(encodedString);
+            File file2download = new File(filePath);
+
+            FileInputStream FileReader=new FileInputStream(file2download);
+            byte fileBytes[]=new byte[this.serverInfo.getMAXSIZE()];
+            byte fileBytesRead[];
+            String encodedString;
+            int readBytesN=0;
+            while((readBytesN=FileReader.read(fileBytes,0, this.serverInfo.getMAXSIZE()))>0){
+                fileBytesRead=Arrays.copyOfRange(fileBytes,0,readBytesN);
+                encodedString = Base64.getEncoder().encodeToString(fileBytesRead);
+                socketWriter.println(encodedString);
+                socketWriter.flush();
+                System.out.println(encodedString);
+            }
+            socketWriter.println("END");
+            socketWriter.flush();
+            //byte[] fileBytes = Files.readAllBytes(file2download.toPath());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error writing" + e.getLocalizedMessage());

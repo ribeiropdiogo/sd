@@ -5,11 +5,18 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class loadManager{
     
-    private int MAXSIZE;
-    private int currentDownloads;
-    private final int MAXDOWN=10;
-    private ReentrantLock lock;
-    private Condition canDownload;
+    public int MAXSIZE;
+    public int currentDownloads;
+    public final int MAXDOWN=10;
+    public ReentrantLock lock;
+    public Condition canDownload;
+
+public loadManager(){
+    this.MAXSIZE=1000000;
+    this.currentDownloads=0;
+    this.lock=new ReentrantLock();
+    this.canDownload=this.lock.newCondition();
+}    
 
 //falta o Fifo
     public synchronized void downloadQueue(){

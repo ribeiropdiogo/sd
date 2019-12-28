@@ -20,6 +20,9 @@ public class mediaFile {
     public String getFileTitle() {
         return this.titulo;
     }
+    public String getFileArtist() {
+        return this.interprete;
+    }
 
     public int getId() {
         return this.mediaId;
