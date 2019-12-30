@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - clienteInterface",
+            "request": "launch",
+            "mainClass": "clienteInterface",
+            "projectName": "client_a3e6d792"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - clientRemote",
             "request": "launch",
             "mainClass": "clientRemote"

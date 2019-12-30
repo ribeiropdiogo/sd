@@ -10,17 +10,21 @@ public class serverRemote{
         this.mediaPath=mediaPathIn;
     }
 
-    public void login(){
-
+    public String register(String Nome, String Password){
+        return "";
     }
-    public void publish(){
 
+    public String login(String Nome, String Password){
+        return "";
     }
-    public void search(){
-
+    public String publish(String filename){
+        return "";
     }
-    public void download(){
-
+    public String search(String Tag){
+        return "";
+    }
+    public String download(String FileName){
+        return "";
     }
 
 }
