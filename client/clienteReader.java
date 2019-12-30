@@ -1,9 +1,11 @@
 import java.io.BufferedReader;
+import java.util.ArrayList;
 
 public class clienteReader implements Runnable{
 
 private String MediaPath;    
 private String onGoingDownload;    
+private ArrayList <String> searchList;
 private BufferedReader socketReader;
 
 public clienteReader(BufferedReader socketReaderIn,String MediaPathIn){
