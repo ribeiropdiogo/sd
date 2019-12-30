@@ -150,22 +150,32 @@ public class serverWorker implements Runnable {
     }
 
     public void search(String input, PrintWriter socketWriter) {
+        if (this.loggedUserName == "") {
+            socketWriter.println("ERROR NOT LOGGED");
+            return;
+        }
         ArrayList<String> songList = this.serverInfo.SearchOnTag(input);
         for (int i = 0; i < songList.size(); i++) {
             socketWriter.println(songList.get(i));
         }
-        socketWriter.println("END");
+        socketWriter.println("SEK END");
         socketWriter.flush();
     }
 
     // Falta respestar as restrições
     // recebe um id, tem se sacar o nome do model ou guardamos com id
     public void download(String fileId, PrintWriter socketWriter) {
+        if (this.loggedUserName == "") {
+            socketWriter.println("ERROR NOT LOGGED");
+            return;
+        }
         int fileNumber=Integer.parseInt(fileId);
         String filePath = new StringBuilder(this.mediaFolderPath).append(fileNumber).toString();
         String fileName = new StringBuilder(this.serverInfo.getFileTitle(fileNumber)).append(" "+serverInfo.getFileArtist(fileNumber)).toString();
         System.out.println(filePath);
+        this.serverInfo.ldManager.waitDownload(this.serverInfo.ldManager.getTicket());
         try {
+            Thread.sleep(5000);
             socketWriter.println("DOW "+fileName);
             socketWriter.flush();
             File file2download = new File(filePath);
@@ -182,13 +192,15 @@ public class serverWorker implements Runnable {
                 socketWriter.flush();
                 System.out.println(encodedString);
             }
-            socketWriter.println("END");
+            socketWriter.println("DAW END");
             socketWriter.flush();
+            FileReader.close();
             //byte[] fileBytes = Files.readAllBytes(file2download.toPath());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error writing" + e.getLocalizedMessage());
         }
+        this.serverInfo.ldManager.freeDownload();
 
     }
 

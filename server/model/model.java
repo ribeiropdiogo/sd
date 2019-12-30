@@ -12,7 +12,7 @@ public class model implements Serializable {
     private Map<String, user> users;
     private Map<Integer, mediaFile> files;
     private uploadLog uploadLog;
-    private loadManager ldManager;
+    public loadManager ldManager;
     private ReentrantLock usersLock;
     private ReentrantLock filesLock;
 

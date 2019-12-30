@@ -23,7 +23,7 @@ public class notificationWorker implements Runnable {
             this.serverInfo.sleepIfUpdated(this.lastLogUpdated);
             String newLogs[] = this.serverInfo.newLogs(lastLogUpdated);
             for (String log : newLogs) {
-                socketWriter.println(log);
+                socketWriter.println("NEW "+log);
             }
             this.lastLogUpdated += newLogs.length;
         }
