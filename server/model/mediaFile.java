@@ -44,11 +44,11 @@ public class mediaFile {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(Integer.toString(this.mediaId) + " ");
-        builder.append(this.titulo + " ");
-        builder.append(this.interprete + " ");
-        builder.append(this.ano + " ");
-
+        builder.append("Id: "+Integer.toString(this.mediaId) + " ");
+        builder.append("Titulo: "+this.titulo + " ");
+        builder.append("Interprete: "+this.interprete + " ");
+        builder.append("Ano: "+this.ano + " ");
+        builder.append("Etiquetas: ");
         for (int i = 0; i < this.tags.length; i++) {
             builder.append(this.tags[i]+" ");
         }

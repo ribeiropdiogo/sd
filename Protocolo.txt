@@ -1,17 +1,17 @@
 //Registo
 REG +string(nome)+string(password)
 //answer(weak pass?)
-SUCCESS REGISTERED||ERROR NAME ALREADY IN USE||ERROR UNKNOWN
+REG SUCCESS ||REG ERROR NAME||REG ERROR UNKNOWN
 
 //Login 
 LOG +string(name)+string(password)
 //answer
-SUCESS LOGGED IN||ERROR WRONG PASSWORD||ERROR NO USER||ERROR UNKNOWN
+LOG SUCESS||LOG ERROR PASSWORD||LOG ERROR NAME||LOG ERROR UNKNOWN
 
 //Publish
 PUB + string(titulo)+string(interprete) +string(ano)+ (tags)[]{até acabar a line} \n bytes(lines+"PUB END")
 //answer
-SUCCESS PUBLISHED||ERROR UNKNOWN
+PUB SUCESS||PUB ERROR UNKNOWN
 
 //Search
 SEK+string(etiqueta=nome||interprete||tag?)
@@ -21,7 +21,7 @@ SEK+string(etiqueta=nome||interprete||tag?)
 //Download
 DOW+int
 //answer
-"DEW NOME ARTISTA" + bytes(lines+"DOW END")||ERROR NOT FOUND||EROR UNKNOWN
+"DOW NOME ARTISTA" + bytes(lines+"DOW END")||ERROR NOT FOUND||EROR UNKNOWN
 
 //Notificação
 NEW+string(titulo)+string(interprete)+string(ano)+tags

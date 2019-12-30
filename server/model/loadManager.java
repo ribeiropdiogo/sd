@@ -8,7 +8,7 @@ public class loadManager{
     public int MAXSIZE;
     private int ticketsOut;
     private int downloadsDone;
-    private final int MAXDOWN=1;
+    private final int MAXDOWN=2;
     private ReentrantLock lock;
     private Condition canDownload;
 
