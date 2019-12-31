@@ -1,10 +1,12 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 
 public class clienteReader implements Runnable {
 
+    private boolean isOpen;
     private String MediaPath;
     private String onGoingDownload;
     private ArrayList<String> searchList;
@@ -13,7 +15,13 @@ public class clienteReader implements Runnable {
     public clienteReader(BufferedReader socketReaderIn, String MediaPathIn) {
         this.MediaPath = MediaPathIn;
         this.onGoingDownload = null;
+        this.searchList= new ArrayList<String>();
         this.socketReader = socketReaderIn;
+        this.isOpen=true;
+    }
+
+    public boolean isOpen(){
+        return this.isOpen;
     }
 
     public void processInput(String input) {
@@ -60,7 +68,7 @@ public class clienteReader implements Runnable {
         } else if (Input.equals("ERROR PASSWORD")) {
             System.out.println("Ocorreu um erro durante Login, a password é incorreta");
         } else if (Input.equals("ERROR UNKNOWN")) {
-            System.out.println("Ocorreu um erro durante Registo");
+            System.out.println("Ocorreu um erro durante o pedido de Login");
         }
     }
 
@@ -101,6 +109,7 @@ public class clienteReader implements Runnable {
         } else {
             try{
             String filePath = new StringBuilder(this.MediaPath).append(this.onGoingDownload+".mp3").toString();
+            File file2Upload = new File(filePath);
             FileOutputStream output = new FileOutputStream(filePath, true);
             output.write(Base64.getDecoder().decode(Input));
             output.flush();
@@ -119,15 +128,18 @@ public class clienteReader implements Runnable {
     } 
 
     public void run() {
-        String Input;
-        while (true) {
+        String Input="";
+        while (Input!=null) {
             try {
                 Input = this.socketReader.readLine();
+                System.out.println("Input is "+Input);
                 this.processInput(Input);
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
 
         }
+        //System.out.println("Leitor de Servidor Fechou");
+        this.isOpen=false;
     }
 }

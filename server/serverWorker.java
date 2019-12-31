@@ -98,7 +98,7 @@ public class serverWorker implements Runnable {
             this.sendNoInput(socketWriter);
         }
         try {
-            //check name
+            //check name login dar throw de no nameexception
             if (this.serverInfo.login(infos[0], infos[1])) {
                 socketWriter.println("LOG SUCESS");
                 socketWriter.flush();
@@ -117,6 +117,7 @@ public class serverWorker implements Runnable {
     public void publish(String Input, PrintWriter socketWriter, BufferedReader socketReader) {
         if (this.loggedUserName == "") {
             socketWriter.println("PUB ERROR NOT LOGGED");
+            socketWriter.flush();
             return;
         }
 
@@ -160,6 +161,7 @@ public class serverWorker implements Runnable {
     public void search(String input, PrintWriter socketWriter) {
         if (this.loggedUserName == "") {
             socketWriter.println("SEK ERROR NOT LOGGED");
+            socketWriter.flush();
             return;
         }
         ArrayList<String> songList = this.serverInfo.SearchOnTag(input);
@@ -216,7 +218,7 @@ public class serverWorker implements Runnable {
     }
 
     public void sendNoInput(PrintWriter socketWriter) {
-        socketWriter.println("hey");
+        socketWriter.println("DATA TRANSFER ERROR");
         socketWriter.flush();
     }
 

@@ -12,17 +12,20 @@ public class clienteInterface {
             BufferedReader stdinReader = new BufferedReader(new InputStreamReader(System.in));
             BufferedReader socketReader = new BufferedReader(new InputStreamReader(clsocket.getInputStream()));
             PrintWriter socketWriter = new PrintWriter(clsocket.getOutputStream());
+            socketWriter.flush();
             String mediaFolderPath = "./mediaFiles/";
             String stdinLine = new String();
             String serverInputAnswer="";
             Boolean exitSwitch = false;
 
             serverRemote server = new serverRemote(socketWriter, mediaFolderPath);
-            Thread clientReader = new Thread(new clienteReader(socketReader, mediaFolderPath));
+
+            clienteReader cr = new clienteReader(socketReader, mediaFolderPath);
+            Thread clientReader = new Thread(cr);
             clientReader.start();
 
             System.out.println("Digite a ação pretendida (Help para a lista de ações possiveis)");
-            while (exitSwitch == false) {
+            while (exitSwitch == false&&cr.isOpen()) {
                 try {
                     stdinLine = stdinReader.readLine();
                     String input[] = stdinLine.split(" ");
@@ -65,9 +68,16 @@ public class clienteInterface {
                 }
 
             }
+            if(exitSwitch==true){
+                System.out.println("Quit recebido, saindo.");
+            }
+            else if(cr.isOpen()==false){
+                System.out.println("Leitor do Servidor fechou, possivelmente porque o servidor foi desligado, o programa irá encerrar.");
+            }
 
             clsocket.shutdownOutput();
             clsocket.shutdownInput();
+            clientReader.join();
             clsocket.close();
         } catch (Exception e) {
             System.out.println("Ocorreu um erro, possivelmente o servidor não se encontra ativo.");

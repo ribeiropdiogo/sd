@@ -33,7 +33,13 @@ public class model implements Serializable {
 
     public boolean login(String nameIn, String passwordIn) {
         this.usersLock.lock();
-        boolean result= this.users.get(nameIn).checkPassword(passwordIn);
+        user user2Log=this.users.get(nameIn);
+        if(user2Log==null){
+            this.usersLock.unlock();
+            //throw nouserException
+            return false;
+        }
+        boolean result= user2Log.checkPassword(passwordIn);
         this.usersLock.unlock();
         return result;
     }

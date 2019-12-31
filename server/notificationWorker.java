@@ -25,6 +25,7 @@ public class notificationWorker implements Runnable {
             for (String log : newLogs) {
                 socketWriter.println("NEW "+log);
             }
+            socketWriter.flush();
             this.lastLogUpdated += newLogs.length;
         }
 
