@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class clienteInterface {
     public static void main(String[] args) {
@@ -37,7 +38,8 @@ public class clienteInterface {
                         serverInputAnswer = server.login(input[1], input[2]);
                         break;
                     case ("Publish"):
-                        serverInputAnswer = server.publish(input[1]);
+                        String[] newArray = Arrays.copyOfRange(input, 1, input.length);
+                        serverInputAnswer = server.publish(newArray);
                         break;
                     case ("Search"):
                         serverInputAnswer = server.search(input[1]);
@@ -51,7 +53,7 @@ public class clienteInterface {
                     case ("Help"):
                     System.out.println("Register + Nome + Password");  
                     System.out.println("Login + Nome + Password");   
-                    System.out.println("Publish + NomeDoFicheiro");   
+                    System.out.println("Publish + NomeDaMusica + NomeArtista + Ano + Tags");   
                     System.out.println("Search + Tag");   
                     System.out.println("Download + NomeDoFicheiro");
                     System.out.println("Quit");       
