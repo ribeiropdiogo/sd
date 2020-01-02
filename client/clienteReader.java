@@ -54,7 +54,7 @@ public class clienteReader implements Runnable {
         if (Input.equals("SUCESS")) {
             System.out.println("Registo efetuado com sucesso");
         } else if (Input.equals("ERROR NAME")) {
-            System.out.println("Ocorreu um erro durante Registo, o nome é invalido ou já estã em uso");
+            System.out.println("Ocorreu um erro durante Registo, o nome é invalido ou já está em uso");
         } else if (Input.equals("ERROR UNKNOWN")) {
             System.out.println("Ocorreu um erro durante Registo");
         }
@@ -108,6 +108,9 @@ public class clienteReader implements Runnable {
 
         if (this.onGoingDownload == null) {
             this.onGoingDownload = Input;
+            String filePath = new StringBuilder(this.MediaPath).append(this.onGoingDownload + ".mp3").toString();
+            File file2Upload = new File(filePath);
+            file2Upload.delete();
         } else {
             try {
                 String filePath = new StringBuilder(this.MediaPath).append(this.onGoingDownload + ".mp3").toString();

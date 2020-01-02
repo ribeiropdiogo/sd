@@ -1,5 +1,8 @@
 import model.*;
 
+import exceptions.duplicateUserException;
+import exceptions.noSuchUserException;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,7 +47,7 @@ public class serverWorker implements Runnable {
             return;
         }
 
-        //TODO falta testar o length do input pa todos
+        // TODO falta testar o length do input pa todos
         switch (input.substring(0, 3)) {
 
         case ("REG"):
@@ -80,9 +83,11 @@ public class serverWorker implements Runnable {
             this.sendNoInput(socketWriter);
         }
         try {
-            //check duplicate user
             this.serverInfo.addUser(infos[0], infos[1]);
             socketWriter.println("REG SUCESS");
+            socketWriter.flush();
+        } catch (duplicateUserException e) {
+            socketWriter.println("REG ERROR NAME");
             socketWriter.flush();
         } catch (Exception e) {
             socketWriter.println("REG ERROR UNKNOWN");
@@ -98,7 +103,7 @@ public class serverWorker implements Runnable {
             this.sendNoInput(socketWriter);
         }
         try {
-            //check name login dar throw de no nameexception
+            // check name login dar throw de no nameexception
             if (this.serverInfo.login(infos[0], infos[1])) {
                 socketWriter.println("LOG SUCESS");
                 socketWriter.flush();
@@ -107,6 +112,10 @@ public class serverWorker implements Runnable {
                 socketWriter.println("LOG ERROR PASSWORD");
                 socketWriter.flush();
             }
+        } catch (noSuchUserException e) {
+            socketWriter.println("LOG ERROR NAME");
+            socketWriter.flush();
+            e.printStackTrace();
         } catch (Exception e) {
             socketWriter.println("LOG ERROR UNKNOWN");
             socketWriter.flush();
@@ -116,12 +125,12 @@ public class serverWorker implements Runnable {
 
     public void publish(String Input, PrintWriter socketWriter, BufferedReader socketReader) {
         if (this.loggedUserName == "") {
-            try{
-            while (socketReader.readLine().equals("PUB END") == false) {}
-        }
-        catch(Exception e){
-            //TODO something here?
-        }
+            try {
+                while (socketReader.readLine().equals("PUB END") == false) {
+                }
+            } catch (Exception e) {
+                // TODO something here?
+            }
             socketWriter.println("PUB ERROR NOT LOGGED");
             socketWriter.flush();
             return;
@@ -161,7 +170,7 @@ public class serverWorker implements Runnable {
             e.printStackTrace();
             file2Upload.delete();
         }
-        
+
     }
 
     public void search(String input, PrintWriter socketWriter) {
@@ -172,7 +181,7 @@ public class serverWorker implements Runnable {
         }
         ArrayList<String> songList = this.serverInfo.SearchOnTag(input);
         for (int i = 0; i < songList.size(); i++) {
-            socketWriter.println("SEK "+songList.get(i));
+            socketWriter.println("SEK " + songList.get(i));
         }
         socketWriter.println("SEK END");
         socketWriter.flush();
@@ -185,29 +194,30 @@ public class serverWorker implements Runnable {
             socketWriter.println("ERROR NOT LOGGED");
             return;
         }
-        int fileNumber=Integer.parseInt(fileId);
+        int fileNumber = Integer.parseInt(fileId);
         String filePath = new StringBuilder(this.mediaFolderPath).append(fileNumber).toString();
-        String fileName = new StringBuilder(this.serverInfo.getFileTitle(fileNumber)).append("-"+serverInfo.getFileArtist(fileNumber)).toString();
+        String fileName = new StringBuilder(this.serverInfo.getFileTitle(fileNumber))
+                .append("-" + serverInfo.getFileArtist(fileNumber)).toString();
         System.out.println(filePath);
 
-        //QUEUE
+        // QUEUE
         this.serverInfo.ldManager.waitDownload(this.serverInfo.ldManager.getTicket());
-        
+
         try {
             Thread.sleep(5000);
-            socketWriter.println("DOW "+fileName);
+            socketWriter.println("DOW " + fileName);
             socketWriter.flush();
             File file2download = new File(filePath);
 
-            FileInputStream FileReader=new FileInputStream(file2download);
-            byte fileBytes[]=new byte[this.serverInfo.getMAXSIZE()];
+            FileInputStream FileReader = new FileInputStream(file2download);
+            byte fileBytes[] = new byte[this.serverInfo.getMAXSIZE()];
             byte fileBytesRead[];
             String encodedString;
-            int readBytesN=0;
-            while((readBytesN=FileReader.read(fileBytes,0, this.serverInfo.getMAXSIZE()))>0){
-                fileBytesRead=Arrays.copyOfRange(fileBytes,0,readBytesN);
+            int readBytesN = 0;
+            while ((readBytesN = FileReader.read(fileBytes, 0, this.serverInfo.getMAXSIZE())) > 0) {
+                fileBytesRead = Arrays.copyOfRange(fileBytes, 0, readBytesN);
                 encodedString = Base64.getEncoder().encodeToString(fileBytesRead);
-                socketWriter.println("DOW "+encodedString);
+                socketWriter.println("DOW " + encodedString);
                 socketWriter.flush();
                 System.out.println(encodedString);
             }

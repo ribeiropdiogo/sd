@@ -1,5 +1,8 @@
 package model;
 
+import exceptions.noSuchUserException;
+import exceptions.duplicateUserException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class model implements Serializable {
+public class model {
     private Map<String, user> users;
     private Map<Integer, mediaFile> files;
     private uploadLog uploadLog;
@@ -25,19 +28,22 @@ public class model implements Serializable {
         this.filesLock = new ReentrantLock();
     }
 
-    public void addUser(String nameIn, String passwordIn) {
+    public void addUser(String nameIn, String passwordIn) throws duplicateUserException {
         this.usersLock.lock();
+        if(this.users.get(nameIn)!=null){
+            this.usersLock.unlock();
+            throw new duplicateUserException("");
+        }
         this.users.put(nameIn, new user(nameIn, passwordIn));
         this.usersLock.unlock();
     }
 
-    public boolean login(String nameIn, String passwordIn) {
+    public boolean login(String nameIn, String passwordIn) throws noSuchUserException{
         this.usersLock.lock();
         user user2Log=this.users.get(nameIn);
         if(user2Log==null){
             this.usersLock.unlock();
-            //throw nouserException
-            return false;
+            throw new noSuchUserException("");
         }
         boolean result= user2Log.checkPassword(passwordIn);
         this.usersLock.unlock();
