@@ -15,12 +15,12 @@ public class clienteReader implements Runnable {
     public clienteReader(BufferedReader socketReaderIn, String MediaPathIn) {
         this.MediaPath = MediaPathIn;
         this.onGoingDownload = null;
-        this.searchList= new ArrayList<String>();
+        this.searchList = new ArrayList<String>();
         this.socketReader = socketReaderIn;
-        this.isOpen=true;
+        this.isOpen = true;
     }
 
-    public boolean isOpen(){
+    public boolean isOpen() {
         return this.isOpen;
     }
 
@@ -75,71 +75,72 @@ public class clienteReader implements Runnable {
     public void publish(String Input) {
         if (Input.equals("SUCESS")) {
             System.out.println("Publicação efetuada com sucesso");
+        } else if (Input.equals("ERROR NOT LOGGED")) {
+            System.out.println("Ocorreu um erro durante a Publicação, não tem sessão iniciada");
         } else if (Input.equals("ERROR UNKNOWN")) {
             System.out.println("Ocorreu um erro durante a Publicação");
         }
     }
 
     public void search(String Input) {
-        if(Input.equals("ERROR NOT LOGGED")){
+        if (Input.equals("ERROR NOT LOGGED")) {
             System.out.println("Ocorreu um erro a efetuar a procura, não tem sessão inciada");
             return;
         }
-        if(Input.equals("END")){
+        if (Input.equals("END")) {
             System.out.println("Lista de musicas que satisfazem a procura:");
-            for(String song:this.searchList){
+            for (String song : this.searchList) {
                 System.out.println(song);
             }
             this.searchList.clear();
             return;
-        }
-        else{
+        } else {
             this.searchList.add(Input);
         }
     }
 
     public void download(String Input) {
-        if(Input.equals("END")){
-            this.onGoingDownload=null;
+        if (Input.equals("END")) {
+            System.out.println("Download Executado com sucesso, novo ficheiro: " + this.onGoingDownload + ".mp3");
+            this.onGoingDownload = null;
             return;
         }
 
         if (this.onGoingDownload == null) {
             this.onGoingDownload = Input;
         } else {
-            try{
-            String filePath = new StringBuilder(this.MediaPath).append(this.onGoingDownload+".mp3").toString();
-            File file2Upload = new File(filePath);
-            FileOutputStream output = new FileOutputStream(filePath, true);
-            output.write(Base64.getDecoder().decode(Input));
-            output.flush();
-            output.close();
-            }
-            catch(Exception e){
-                System.out.println("Ocorreu uma "+e.getClass()+"exception");
+            try {
+                String filePath = new StringBuilder(this.MediaPath).append(this.onGoingDownload + ".mp3").toString();
+                File file2Upload = new File(filePath);
+                FileOutputStream output = new FileOutputStream(filePath, true);
+                output.write(Base64.getDecoder().decode(Input));
+                output.flush();
+                output.close();
+            } catch (Exception e) {
+                System.out.println("Ocorreu uma " + e.getClass() + "exception");
             }
         }
 
     }
 
-    public void notification(String Input){
-        System.out.println("Nova música "+ Input);
+    public void notification(String Input) {
+        System.out.println("Nova música " + Input);
 
-    } 
+    }
 
     public void run() {
-        String Input="";
-        while (Input!=null) {
+        String Input = "";
+        while (Input != null) {
             try {
                 Input = this.socketReader.readLine();
-                System.out.println("Input is "+Input);
+                System.out.println("Input is " + Input);
                 this.processInput(Input);
             } catch (Exception e) {
-                //e.printStackTrace();
+                // e.printStackTrace();
             }
 
         }
-        //System.out.println("Leitor de Servidor Fechou");
-        this.isOpen=false;
+        // System.out.println("Leitor de Servidor Fechou");
+        this.isOpen = false;
     }
 }

@@ -37,12 +37,18 @@ public class serverRemote {
 
     public String publish(String[] parametros) {
         try {
-            String params = String.join(" ", parametros);
+
+            String[] metaDados = Arrays.copyOfRange(parametros, 1, parametros.length);
+            String params = String.join(" ", metaDados);
             this.socketWriter.println("PUB " + params);
             this.socketWriter.flush();
 
-            String filename = parametros[0]+".mp3";
-            File file2publish = new File(filename);
+            String filename = parametros[0];
+            String filePath = new StringBuilder(this.mediaPath).append(filename).toString();
+            File file2publish = new File(filePath);
+            if(file2publish.exists()){
+                //TODO something here
+            }
 
             FileInputStream FileReader=new FileInputStream(file2publish);
             byte fileBytes[]=new byte[1000000];
@@ -62,7 +68,8 @@ public class serverRemote {
 
             return "Pedido de Publicação Efetuado";
         } catch (Exception e) {
-            return "Ocorreu um erro ao efetuar o pedido de Publicação";
+            //e.printStackTrace();
+            return "Ocorreu um erro ao efetuar o pedido de Publicação, verifique se o ficheiro existe";
         }
     }
 

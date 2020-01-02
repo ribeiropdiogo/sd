@@ -116,6 +116,12 @@ public class serverWorker implements Runnable {
 
     public void publish(String Input, PrintWriter socketWriter, BufferedReader socketReader) {
         if (this.loggedUserName == "") {
+            try{
+            while (socketReader.readLine().equals("PUB END") == false) {}
+        }
+        catch(Exception e){
+            //TODO something here?
+        }
             socketWriter.println("PUB ERROR NOT LOGGED");
             socketWriter.flush();
             return;
@@ -181,7 +187,7 @@ public class serverWorker implements Runnable {
         }
         int fileNumber=Integer.parseInt(fileId);
         String filePath = new StringBuilder(this.mediaFolderPath).append(fileNumber).toString();
-        String fileName = new StringBuilder(this.serverInfo.getFileTitle(fileNumber)).append(" "+serverInfo.getFileArtist(fileNumber)).toString();
+        String fileName = new StringBuilder(this.serverInfo.getFileTitle(fileNumber)).append("-"+serverInfo.getFileArtist(fileNumber)).toString();
         System.out.println(filePath);
 
         //QUEUE
