@@ -44,7 +44,7 @@ public class serverWorker implements Runnable {
             return;
         }
 
-        // falta testar o length do input pa todos
+        //TODO falta testar o length do input pa todos
         switch (input.substring(0, 3)) {
 
         case ("REG"):
@@ -214,7 +214,7 @@ public class serverWorker implements Runnable {
             socketWriter.println("DOW END");
             socketWriter.flush();
             FileReader.close();
-            //byte[] fileBytes = Files.readAllBytes(file2download.toPath());
+            this.serverInfo.addDownloadToFile(fileNumber);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error writing" + e.getLocalizedMessage());

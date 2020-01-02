@@ -52,6 +52,17 @@ public class model implements Serializable {
         this.uploadLog.addLog(newFile.toString());
         this.filesLock.unlock();
     }
+
+    public void addDownloadToFile(int fileNumber){
+        this.filesLock.lock();
+        mediaFile fileDownloaded=this.files.get(fileNumber);
+        if(fileDownloaded==null){
+            this.filesLock.unlock();
+        }
+        fileDownloaded.addDownload();
+        this.filesLock.unlock();
+    }
+
     
     //Já que não prevemos retirar ficheiros, consultas n precisam ser sincronas
     public String getNextFileNString() {

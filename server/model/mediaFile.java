@@ -15,6 +15,7 @@ public class mediaFile {
         this.interprete = interpreteIn;
         this.ano = anoIn;
         this.tags = tagsIn;
+        this.Ndownloads=0;
     }
 
     public String getFileTitle() {
@@ -30,6 +31,10 @@ public class mediaFile {
 
     public int getNDownloads() {
         return this.Ndownloads;
+    }
+
+    public void addDownload() {
+        this.Ndownloads=this.Ndownloads+1;
     }
 
     public boolean containsTag(String tagIn) {
@@ -52,6 +57,7 @@ public class mediaFile {
         for (int i = 0; i < this.tags.length; i++) {
             builder.append(this.tags[i]+" ");
         }
+        builder.append("Numero de downloads: "+this.Ndownloads);
 
         return builder.toString();
     }
