@@ -14,14 +14,14 @@ PUB + string(titulo)+string(interprete) +string(ano)+ (tags)[]{até acabar a lin
 PUB SUCESS||PUB ERROR UNKNOWN
 
 //Search
-SEK+string(etiqueta=nome||interprete||tag?)
+SEK+string(etiqueta)
 //answer
-(SNG+string(titulo)+string(interprete)+string(ano)+tags)[lines]+SEK END||ERROR NO SONGS||ERROR UNKNOWN
+(SNG+string(titulo)+string(interprete)+string(ano)+tags)[lines]+SEK END||||SEK ERROR UNKNOWN
 
 //Download
 DOW+int
 //answer
-"DOW NOME ARTISTA" + bytes(lines+"DOW END")||ERROR NOT FOUND||EROR UNKNOWN
+"DOW NOME-ARTISTA" + "DOW bytes"(lines+"DOW END")||DOW ERROR NO FILE||DOW ERROR NOT LOGGED||DOW ERROR UNKNOWN
 
 //Notificação
 NEW+string(titulo)+string(interprete)+string(ano)+tags

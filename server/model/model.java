@@ -76,7 +76,11 @@ public class model {
     }
 
     public String getFileTitle(int fileId) {
-        return this.files.get(fileId).getFileTitle();
+        mediaFile file=this.files.get(fileId);
+        if(file==null){
+            return null;
+        }
+        return file.getFileTitle();
     }
 
     public String getFileArtist(int fileId) {

@@ -187,14 +187,20 @@ public class serverWorker implements Runnable {
         socketWriter.flush();
     }
 
-    // Falta respestar as restrições
-    // recebe um id, tem se sacar o nome do model ou guardamos com id
     public void download(String fileId, PrintWriter socketWriter) {
         if (this.loggedUserName == "") {
-            socketWriter.println("ERROR NOT LOGGED");
+            socketWriter.println("DOW ERROR NOT LOGGED");
+            socketWriter.flush();
             return;
         }
+
         int fileNumber = Integer.parseInt(fileId);
+        if (this.serverInfo.getFileTitle(fileNumber)==null){
+            socketWriter.println("DOW ERROR NO FILE");
+            socketWriter.flush();
+            return;
+        }
+
         String filePath = new StringBuilder(this.mediaFolderPath).append(fileNumber).toString();
         String fileName = new StringBuilder(this.serverInfo.getFileTitle(fileNumber))
                 .append("-" + serverInfo.getFileArtist(fileNumber)).toString();

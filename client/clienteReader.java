@@ -105,6 +105,18 @@ public class clienteReader implements Runnable {
             this.onGoingDownload = null;
             return;
         }
+        if (Input.equals("ERROR NO FILE")) {
+            System.out.println("Ocorreu um erro no download, o ficheiro expecificado não existe");
+            return;
+        }
+        if (Input.equals("ERROR NOT LOGGED")) {
+            System.out.println("Ocorreu um erro no download, não pode ser executado sem sessão iniciada");
+            return;
+        }
+        if (Input.equals("ERROR UNKNOWN")) {
+            System.out.println("Ocorreu um erro durante download.");
+            return;
+        }
 
         if (this.onGoingDownload == null) {
             this.onGoingDownload = Input;
@@ -120,7 +132,7 @@ public class clienteReader implements Runnable {
                 output.flush();
                 output.close();
             } catch (Exception e) {
-                System.out.println("Ocorreu uma " + e.getClass() + "exception");
+                System.out.println("Ocorreu uma " + e.getClass() + "exception durante o download");
             }
         }
 
