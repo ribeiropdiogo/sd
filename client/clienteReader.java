@@ -148,14 +148,12 @@ public class clienteReader implements Runnable {
         while (Input != null) {
             try {
                 Input = this.socketReader.readLine();
-                System.out.println("Input is " + Input);
                 this.processInput(Input);
             } catch (Exception e) {
-                // e.printStackTrace();
+                System.out.println("Ocorreu um erro no Leitor de Servidor");
             }
 
         }
-        // System.out.println("Leitor de Servidor Fechou");
         this.isOpen = false;
     }
 }

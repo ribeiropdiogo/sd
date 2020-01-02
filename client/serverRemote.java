@@ -60,7 +60,6 @@ public class serverRemote {
                 encodedString = Base64.getEncoder().encodeToString(fileBytesRead);
                 socketWriter.println(encodedString);
                 socketWriter.flush();
-                System.out.println(encodedString);
             }
             socketWriter.println("PUB END");
             socketWriter.flush();

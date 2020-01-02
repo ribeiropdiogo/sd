@@ -110,16 +110,7 @@ public class model {
         this.uploadLog.sleepIfUpdated(lastLogUpdated);
     }
 
-    /*
-     * public Condition getUpdateCondition(){ return
-     * this.uploadLog.getUpdateCondition(); }
-     * 
-     * public boolean isUpdated(int lastLogUpdated){ return
-     * this.uploadLog.isUpdated(lastLogUpdated); }
-     */
-
     public String[] newLogs(int lastLogUpdated) {
-        System.out.println("Dude had " + lastLogUpdated + " im at " + this.uploadLog.getNlogs());
         int newLogsNumber = this.uploadLog.getNlogs() - lastLogUpdated;
         String[] newLogs = new String[newLogsNumber];
 

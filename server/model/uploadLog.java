@@ -41,7 +41,6 @@ public class uploadLog {
             try {
                 this.lock.lock();
                 wakeUpOnUpdate.await();
-                System.out.println("Wake me up inside");
                 this.lock.unlock();
             } catch (InterruptedException e) {
                 e.printStackTrace();

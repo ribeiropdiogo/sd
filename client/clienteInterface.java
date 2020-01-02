@@ -16,7 +16,7 @@ public class clienteInterface {
             socketWriter.flush();
             String mediaFolderPath = "./mediaFiles/";
             String stdinLine = new String();
-            String serverInputAnswer="";
+            String remoteServerInputAnswer="";
             Boolean exitSwitch = false;
 
             serverRemote server = new serverRemote(socketWriter, mediaFolderPath);
@@ -32,20 +32,20 @@ public class clienteInterface {
                     String input[] = stdinLine.split(" ");
                     switch (input[0]) {
                     case ("Register"):
-                        serverInputAnswer = server.register(input[1], input[2]);
+                        remoteServerInputAnswer = server.register(input[1], input[2]);
                         break;
                     case ("Login"):
-                        serverInputAnswer = server.login(input[1], input[2]);
+                        remoteServerInputAnswer = server.login(input[1], input[2]);
                         break;
                     case ("Publish"):
                         String[] newArray = Arrays.copyOfRange(input, 1, input.length);
-                        serverInputAnswer = server.publish(newArray);
+                        remoteServerInputAnswer = server.publish(newArray);
                         break;
                     case ("Search"):
-                        serverInputAnswer = server.search(input[1]);
+                        remoteServerInputAnswer = server.search(input[1]);
                         break;
                     case ("Download"):
-                        serverInputAnswer = server.download(input[1]);
+                        remoteServerInputAnswer = server.download(input[1]);
                         break;
                     case ("Quit"):
                         exitSwitch = true;
@@ -59,10 +59,10 @@ public class clienteInterface {
                     System.out.println("Quit");       
                     break; 
                     default:
-                        serverInputAnswer = "Input inválido";
+                        remoteServerInputAnswer = "Input inválido";
                         break;
                     }
-                    System.out.println(serverInputAnswer);
+                    System.out.println(remoteServerInputAnswer);
                 }
 
                 catch (Exception e) {

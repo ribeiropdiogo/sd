@@ -16,7 +16,7 @@ PUB SUCESS||PUB ERROR UNKNOWN
 //Search
 SEK+string(etiqueta)
 //answer
-(SNG+string(titulo)+string(interprete)+string(ano)+tags)[lines]+SEK END||||SEK ERROR UNKNOWN
+(SNG+string(titulo)+string(interprete)+string(ano)+tags)[lines]+SEK END
 
 //Download
 DOW+int

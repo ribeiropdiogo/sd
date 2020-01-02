@@ -4,24 +4,12 @@ import exceptions.duplicateUserException;
 import exceptions.noSuchUserException;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -40,45 +28,51 @@ public class serverWorker implements Runnable {
     }
 
     public void processInput(String input, BufferedReader socketReader, PrintWriter socketWriter) {
-        System.out.println(input);
 
         if (input.length() < 5) {
             this.sendNoInput(socketWriter);
             return;
         }
 
-        // TODO falta testar o length do input pa todos
         switch (input.substring(0, 3)) {
 
         case ("REG"):
-            System.out.println("registering user");
+            System.out.println("Received Register Request");
             this.register(input.substring(4), socketWriter);
+            System.out.println("Register Request Done");
             break;
         case ("LOG"):
-            System.out.println("trying to login");
+            System.out.println("Received Login Request");
             this.login(input.substring(4), socketWriter);
+            System.out.println("Login Request Done");
             break;
         case ("PUB"):
-            System.out.println("user wants to publish");
+            System.out.println("Received Publish Request");
             this.publish(input.substring(4), socketWriter, socketReader);
+            System.out.println("Publish Request Done");
             break;
         case ("SEK"):
-            System.out.println("user searching");
+            System.out.println("Received Search Request");
             this.search(input.substring(4), socketWriter);
+            System.out.println("Search Request Done");
             break;
         case ("DOW"):
-            System.out.println("bout to download");
+            System.out.println("Received Download Request");
             this.download(input.substring(4), socketWriter);
+            System.out.println("Download Request Done");
             break;
         default:
+            System.out.println("Received Improper Input");
             this.sendNoInput(socketWriter);
+            System.out.println("Improper Input Answered");
             break;
         }
     }
 
     public void register(String input, PrintWriter socketWriter) {
+        
         String[] infos = input.split(" ");
-        System.out.println(infos[0] + infos[1]);
+
         if (infos.length != 2) {
             this.sendNoInput(socketWriter);
         }
@@ -98,12 +92,13 @@ public class serverWorker implements Runnable {
     }
 
     public void login(String input, PrintWriter socketWriter) {
+
         String[] infos = input.split(" ");
+
         if (infos.length != 2) {
             this.sendNoInput(socketWriter);
         }
         try {
-            // check name login dar throw de no nameexception
             if (this.serverInfo.login(infos[0], infos[1])) {
                 socketWriter.println("LOG SUCESS");
                 socketWriter.flush();
@@ -124,12 +119,14 @@ public class serverWorker implements Runnable {
     }
 
     public void publish(String Input, PrintWriter socketWriter, BufferedReader socketReader) {
+
         if (this.loggedUserName == "") {
             try {
+                // Limpar o socketReader
                 while (socketReader.readLine().equals("PUB END") == false) {
                 }
             } catch (Exception e) {
-                // TODO something here?
+                e.printStackTrace();
             }
             socketWriter.println("PUB ERROR NOT LOGGED");
             socketWriter.flush();
@@ -137,20 +134,23 @@ public class serverWorker implements Runnable {
         }
 
         String encodedString;
-        String[] infos = Input.split(" ");
-        if (infos.length < 4) {
+        String[] metaData = Input.split(" ");
+
+        if (metaData.length < 4) {
             this.sendNoInput(socketWriter);
             return;
         }
-        String tagList[] = new String[infos.length - 3];
-        for (int i = 0; i < (infos.length - 3); i++) {
-            tagList[i] = infos[i + 3];
+        String tagList[] = new String[metaData.length - 3];
+        for (int i = 0; i < (metaData.length - 3); i++) {
+            tagList[i] = metaData[i + 3];
         }
 
         String filePath = new StringBuilder(this.mediaFolderPath).append(this.serverInfo.getNextFileNString())
                 .toString();
-        System.out.println(filePath);
         File file2Upload = new File(filePath);
+
+        // Elimina o ficheiro se já existir, se já cá está sem metadados, é lixo
+        file2Upload.delete();
 
         try {
             FileOutputStream output = new FileOutputStream(filePath, true);
@@ -161,13 +161,14 @@ public class serverWorker implements Runnable {
 
             }
             output.close();
-            this.serverInfo.addFile(infos[0], infos[1], infos[2], tagList);
+            this.serverInfo.addFile(metaData[0], metaData[1], metaData[2], tagList);
             socketWriter.println("PUB SUCCESS");
             socketWriter.flush();
         } catch (Exception e) {
             socketWriter.println("PUB ERROR UNKNOWN");
             socketWriter.flush();
             e.printStackTrace();
+            // Elimina o ficheiro em caso de erro
             file2Upload.delete();
         }
 
@@ -195,7 +196,7 @@ public class serverWorker implements Runnable {
         }
 
         int fileNumber = Integer.parseInt(fileId);
-        if (this.serverInfo.getFileTitle(fileNumber)==null){
+        if (this.serverInfo.getFileTitle(fileNumber) == null) {
             socketWriter.println("DOW ERROR NO FILE");
             socketWriter.flush();
             return;
@@ -204,13 +205,13 @@ public class serverWorker implements Runnable {
         String filePath = new StringBuilder(this.mediaFolderPath).append(fileNumber).toString();
         String fileName = new StringBuilder(this.serverInfo.getFileTitle(fileNumber))
                 .append("-" + serverInfo.getFileArtist(fileNumber)).toString();
-        System.out.println(filePath);
 
         // QUEUE
         this.serverInfo.ldManager.waitDownload(this.serverInfo.ldManager.getTicket());
 
         try {
-            Thread.sleep(5000);
+            // Para Testes
+            // Thread.sleep(5000);
             socketWriter.println("DOW " + fileName);
             socketWriter.flush();
             File file2download = new File(filePath);
@@ -225,17 +226,16 @@ public class serverWorker implements Runnable {
                 encodedString = Base64.getEncoder().encodeToString(fileBytesRead);
                 socketWriter.println("DOW " + encodedString);
                 socketWriter.flush();
-                System.out.println(encodedString);
             }
             socketWriter.println("DOW END");
             socketWriter.flush();
             FileReader.close();
             this.serverInfo.addDownloadToFile(fileNumber);
+            this.serverInfo.ldManager.freeDownload();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error writing" + e.getLocalizedMessage());
+            this.serverInfo.ldManager.freeDownload();
         }
-        this.serverInfo.ldManager.freeDownload();
 
     }
 
@@ -245,7 +245,6 @@ public class serverWorker implements Runnable {
     }
 
     public void run() {
-        // falta a thread para checkar as updates no model.uploadLog
         try {
 
             BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -263,7 +262,6 @@ public class serverWorker implements Runnable {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
         }
 
     }
