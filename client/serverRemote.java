@@ -38,10 +38,7 @@ public class serverRemote {
     public String publish(String[] parametros) {
         try {
 
-            String[] metaDados = Arrays.copyOfRange(parametros, 1, parametros.length);
-            String params = String.join(" ", metaDados);
-            this.socketWriter.println("PUB " + params);
-            this.socketWriter.flush();
+            
 
             String filename = parametros[0];
             String filePath = new StringBuilder(this.mediaPath).append(filename).toString();
@@ -50,6 +47,11 @@ public class serverRemote {
             if(file2publish.exists()==false){
                 return "O ficheiro a publicar não existe";
             }
+
+            String[] metaDados = Arrays.copyOfRange(parametros, 1, parametros.length);
+            String params = String.join(" ", metaDados);
+            this.socketWriter.println("PUB " + params);
+            this.socketWriter.flush();
 
             FileInputStream FileReader=new FileInputStream(file2publish);
             byte fileBytes[]=new byte[1000000];
