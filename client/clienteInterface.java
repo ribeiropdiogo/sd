@@ -53,7 +53,7 @@ public class clienteInterface {
                     case ("Help"):
                     System.out.println("Register + Nome + Password");  
                     System.out.println("Login + Nome + Password");   
-                    System.out.println("Publish + NomeDaMusica + NomeArtista + Ano + Tags");   
+                    System.out.println("Publish +NomeDoFicheiro+ NomeDaMusica + NomeArtista + Ano + Tags");   
                     System.out.println("Search + Tag");   
                     System.out.println("Download + NomeDoFicheiro");
                     System.out.println("Quit");       

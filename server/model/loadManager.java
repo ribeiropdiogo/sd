@@ -23,8 +23,9 @@ public loadManager(){
 public int getTicket(){
     this.lock.lock();
     this.ticketsOut++;
+    int ticket=this.ticketsOut;
     this.lock.unlock();
-    return this.ticketsOut;
+    return ticket;
 }
 
     public void waitDownload(int ticket){
