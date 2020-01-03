@@ -249,13 +249,19 @@ public class serverWorker implements Runnable {
 
             BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter socketWriter = new PrintWriter(this.socket.getOutputStream());
-            new Thread(new notificationWorker(this.serverInfo, socketWriter)).start();
+            notificationWorker notWorker = new notificationWorker(this.serverInfo, socketWriter);
+            Thread notWorkerThread = new Thread(notWorker);
+            notWorkerThread.start();
             String s = null;
 
             while ((s = socketReader.readLine()) != null) {
                 System.out.println("Client sent " + s);
                 this.processInput(s, socketReader, socketWriter);
             }
+            
+            //Para que o notWorker pare quando acordar
+            notWorker.clientOff();
+
             this.socket.shutdownOutput();
             this.socket.shutdownInput();
             this.socket.close();
