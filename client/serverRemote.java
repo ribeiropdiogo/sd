@@ -46,8 +46,9 @@ public class serverRemote {
             String filename = parametros[0];
             String filePath = new StringBuilder(this.mediaPath).append(filename).toString();
             File file2publish = new File(filePath);
-            if(file2publish.exists()){
-                //TODO something here
+            
+            if(file2publish.exists()==false){
+                return "O ficheiro a publicar não existe";
             }
 
             FileInputStream FileReader=new FileInputStream(file2publish);
