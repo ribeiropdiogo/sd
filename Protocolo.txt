@@ -1,27 +1,28 @@
 //Registo
-REG +string(nome)+string(password)
-//answer(weak pass?)
-REG SUCCESS ||REG ERROR NAME||REG ERROR UNKNOWN
+"REG + nome + password"
+//answer
+"REG SUCCESS" ||"REG ERROR NAME"||"REG ERROR UNKNOWN"
 
 //Login 
-LOG +string(name)+string(password)
+"LOG + name + password"
 //answer
-LOG SUCESS||LOG ERROR PASSWORD||LOG ERROR NAME||LOG ERROR UNKNOWN
+"LOG SUCESS"||"LOG ERROR PASSWORD"||"LOG ERROR NAME"||"LOG ERROR UNKNOWN"
 
 //Publish
-PUB + string(titulo)+string(interprete) +string(ano)+ (tags)[]{até acabar a line} \n bytes(lines+"PUB END")
+"PUB + titulo + interprete + ano+ tags" + <<Varios>>"bytes codificados"[Chunks]+PUB END
+
 //answer
-PUB SUCESS||PUB ERROR UNKNOWN
+"PUB SUCESS"||"PUB ERROR UNKNOWN"||"PUB ERROR NOT LOGGED"
 
 //Search
-SEK+string(etiqueta)
+"SEK + Tag"
 //answer
-(SNG+string(titulo)+string(interprete)+string(ano)+tags)[lines]+SEK END
+<<Varios>>"SEK + titulo + interprete + ano + tags" + "SEK END"
 
 //Download
 DOW+int
 //answer
-"DOW NOME-ARTISTA" + "DOW bytes"(lines+"DOW END")||DOW ERROR NO FILE||DOW ERROR NOT LOGGED||DOW ERROR UNKNOWN
+"DOW NOME-ARTISTA" + <<Varios>>"DOW + bytes codificados"[Chunks]+"DOW END"||"DOW ERROR NO FILE"||"DOW ERROR NOT LOGGED"||"DOW ERROR UNKNOWN"
 
 //Notificação
-NEW+string(titulo)+string(interprete)+string(ano)+tags
+"NEW + titulo + interprete + ano + tags"
