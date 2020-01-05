@@ -83,7 +83,7 @@ public class clienteInterface {
             clsocket.close();
         } catch (Exception e) {
             System.out.println("Ocorreu um erro, possivelmente o servidor não se encontra ativo.");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 }
